@@ -1,33 +1,43 @@
 # 🏊 USJ Pool Management System
 
-A full-stack MERN application for managing swimming pool operations at the University of Sri Jayewardenepura. This system facilitates slot booking for students, secure access verification for staff, and schedule management for administrators.
+A full-stack MERN application for managing swimming pool operations at the University of Sri Jayewardenepura. This system facilitates slot booking for students, secure access verification for staff, and schedule management for administrators, now with automated email notifications.
 
-## 🚀 Features
+## 🚀 Key Features
 
-### for 👨‍🎓 Students
-- **Browse Slots**: View real-time availability of swimming slots.
-- **Book Instantly**: One-click booking system.
-- **My Bookings**: View booking history and access entry QR codes.
-- **Mobile Friendly**: easy to use on mobile devices.
+### 📧 Automated Email Notifications (NEW)
+- **Instant Confirmation**: Students receive an email immediately after booking.
+- **Cancellation Alerts**: Notification sent upon booking cancellation.
+- **Smart Reminders**: Automated cron job sends reminders 1 hour before the slot starts.
+- **Admin Broadcasts**: New notices posted by admins are automatically emailed to all students.
 
-### for 👮 Staff (Pool Attendants)
-- **QR Scanner**: Built-in camera scanner to verify student QR codes.
-- **Manual Entry**: Verify bookings using a unique reference code.
-- **Access Control**: Prevent double-entry or cancelled bookings.
+### 👨‍🎓 Student Dashboard
+- **Calendar Booking**: Visual calendar to check availability and book slots instantly.
+- **My Bookings**: View active bookings and history (auto-hides expired cancelled slots).
+- **Digital ID Card**: Auto-generated QR Code card for facility access (Downloadable).
+- **Profile Management**: Upload and update profile pictures.
+- **Real-time Notices**: View important announcements from the admin.
 
-### for 👨‍💼 Admins
-- **Admin Dashboard**: Create, delete, and manage pool slots.
-- **Capacity Management**: Set limits for each session.
-- **Verification Support**: Access to the scanner tool.
+### 🏊‍♂️ Coach Dashboard
+- **Schedule View**: View assigned slots and shifts.
+- **QR Scanner**: Integrated `html5-qrcode` scanner for verifying student IDs.
+- **Attendance Tracking**: Scanning a code verifies the booking and marks attendance in the database.
+
+### 👨‍💼 Admin Dashboard
+- **Notice Management**: Create and delete notices (with email broadcast).
+- **Holiday Management**: Block out dates for pool maintenance or holidays.
+- **Coach Allocations**: Assign coaches to specific time slots.
+- **Slot Management**: Create, delete, and manage pool slots and capacities.
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Frontend**: React.js, Vite, Tailwind CSS v3, React Router v6.
-- **Backend**: Node.js, Express.js.
-- **Database**: MongoDB (Local or Atlas) with Mongoose.
-- **Authentication**: JWT (JSON Web Tokens).
+- **Frontend**: React.js, Vite, Tailwind CSS v3, React Router v6
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB (Local or Atlas) with Mongoose
+- **Authentication**: JWT (JSON Web Tokens)
+- **Email Service**: Nodemailer (SMTP), Node-Cron (Scheduling)
+- **Utilities**: Multer (File Uploads), HTML5-QRCode (Scanner)
 
 ---
 
@@ -42,14 +52,22 @@ A full-stack MERN application for managing swimming pool operations at the Unive
 cd server
 npm install
 
-# Create a .env file
+# Create a .env file in /server with the following:
 # PORT=5000
 # MONGO_URI=mongodb://127.0.0.1:27017/usj-pool-local
 # JWT_SECRET=your_super_secret_key
 # NODE_ENV=development
+#
+# # Email Configuration (Gmail App Password)
+# SMTP_HOST=smtp.gmail.com
+# SMTP_PORT=587
+# SMTP_USER=your_email@gmail.com
+# SMTP_PASS=your_app_password
+# SMTP_EMAIL=your_email@gmail.com
 
-# Seed Admin User
+# Seed Admin & Data
 node create_admin.js
+node seeder.js
 
 # Start Server
 npm run dev
@@ -68,15 +86,17 @@ npm run dev
 
 ---
 
-## 📱 Usage Guide
+## 📱 Usage Flow
 
-1. **Login**: Go to the homepage. Students register; Admins login with credentials above.
-2. **Booking**: Students pick a green slot. A red slot means it is full.
-3. **Verification**:
-   - Students show the QR code from "My Bookings".
-   - Staff logs in, goes to "Scanner", scans the code (or enters the text below it).
-   - "ACCESS GRANTED" means the student can enter.
+1.  **Registration**: Students register an account and upload a profile picture.
+2.  **Booking**: Students select a date on the calendar, choose a slot, and confirm. An email is sent instantly.
+3.  **Entry**:
+    *   Student opens "My Bookings" -> "View QR".
+    *   Coach logs in, opens "Scanner", and scans the code.
+    *   System verifies the valid booking for the current time.
+4.  **Notices**: Admins post notices about pool closures or events, which are broadcasted to all students via email.
 
 ## ⚠️ Troubleshooting
-- **Database Connection Error**: Ensure MongoDB is running. If using local, run `mongod`. If using cloud, check your `.env` URI.
-- **QR Scanner**: Ensure you gave browser camera permissions. If on desktop without a camera, use the Manual Entry code displayed on the student's booking ticket.
+-   **Email Errors**: Ensure you are using an **App Password** for Gmail, not your regular password.
+-   **Scanner Issues**: Ensure browser permissions for the camera are enabled.
+-   **Database**: Verify MongoDB service is running (`mongod`).
