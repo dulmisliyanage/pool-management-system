@@ -5,7 +5,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const colors = require('colors');
 const connectDB = require('./config/db');
-const initReminderJob = require('./jobs/reminderJob');
+// const initReminderJob = require('./jobs/reminderJob');
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
@@ -22,8 +22,12 @@ app.use(express.json());
 // Health Check (No DB required)
 app.get('/ping', (req, res) => res.status(200).send('pong'));
 
-// Serve static files from uploads folder
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+// Serve static files (Check if exists first to avoid crashes)
+const fs = require('fs');
+const uploadsDir = path.join(__dirname, '/uploads');
+if (fs.existsSync(uploadsDir)) {
+  app.use('/uploads', express.static(uploadsDir));
+}
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
