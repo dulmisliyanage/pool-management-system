@@ -30,14 +30,26 @@ app.use('/api/holidays', require('./routes/holidayRoutes'));
 app.use('/api/coach-allocations', require('./routes/coachRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
 
-// Database Connection
-console.log('Attempting to connect to DB... (Restart Triggered)');
+// Database Connection Middleware (Better for Vercel/Serverless)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error(`DB Connection Error: ${error.message}`);
+    res.status(500).json({ error: 'Database connection failed', details: error.message });
+  }
+});
+
+/* 
+// Old connection method - disabled for serverless stability
 connectDB().then(() => {
   // Start Cron Jobs (Disabled for Serverless/Vercel)
   // initReminderJob(); 
 }).catch(err => {
   console.error(`DB connection failed: ${err.message}`);
-});
+}); 
+*/
 
 // Basic Route
 app.get('/', (req, res) => {
