@@ -105,9 +105,14 @@ const Landing = () => {
             {/* Navbar (glassmorphic) */}
             <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16 items-center">
-                        <Logo />
-                        <div className="hidden md:flex items-center space-x-8 text-xs font-black uppercase tracking-[0.2em]">
+                    <div className="relative flex justify-between h-16 items-center">
+                        {/* Left: Logo */}
+                        <div className="flex-shrink-0 flex items-center">
+                            <Logo />
+                        </div>
+
+                        {/* Center: Nav Links (Absolute Positioned for perfect centering) */}
+                        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center space-x-8 text-xs font-black uppercase tracking-[0.2em]">
                             {navLinks.map(link => (
                                 <a
                                     key={link.id}
@@ -120,7 +125,7 @@ const Landing = () => {
                             ))}
                         </div>
 
-                        {/* Right actions: Student Portal */}
+                        {/* Right: Actions */}
                         <div className="flex items-center gap-4">
                             {/* Mobile-only Portal button (placed before toggle) */}
                             <Link
@@ -142,7 +147,7 @@ const Landing = () => {
                             {/* Desktop Portal button (hidden on mobile) */}
                             <Link
                                 to={getPortalRoute(user)}
-                                className="btn-maroon motion-soft !px-6 !py-3 hidden md:inline-flex"
+                                className="btn-maroon motion-soft !px-6 !py-3 hidden md:inline-flex shadow-lg shadow-maroon/20"
                             >
                                 {getPortalLabel(user)}
                             </Link>
